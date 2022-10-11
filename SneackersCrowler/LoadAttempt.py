@@ -5,10 +5,12 @@ class CGood:
     ImgUriList = list()
 
 class CLoadAttempt(object):
-    Source = ""
-    Date = date.today()
-    ErrorList = list()
-    GoodList = list()
+    def __init__(self, SourceName, countToLoad):        
+        self.countToLoad = countToLoad
+        self.Source = SourceName      
+        self.Date = date.today()
+        self.ErrorList = list()
+        self.GoodList = list()
 
 
 

@@ -77,20 +77,18 @@ class CNikeCrowler(object):
         
         return good
 
-    def GetTodayGoodList(self):
-        todayCatch = LoadAttempt.CLoadAttempt()
+    def GetTodayGoodList(self, todayCatch):        
         try:
             self.driver.get("https://nike.com")
             self.CloseInfoPopups()
             self.OpenGoodsPage()
             wholeGUriList = self.GetGoodsUriList()
-            if len(wholeGUriList) > 10:
-                for i in range(7):
+            if len(wholeGUriList) > todayCatch.countToLoad:
+                for i in range(todayCatch.countToLoad):
                     idx = random.randint(0, len(wholeGUriList) -1 )
                     todayCatch.GoodList.append( self.GetDetailedOfGood(wholeGUriList[idx]) )
         except Exception as inst:
             todayCatch.ErrorList.append(inst)
-        return todayCatch;
 
 
 
