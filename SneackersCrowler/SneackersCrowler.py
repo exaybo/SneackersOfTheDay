@@ -3,18 +3,35 @@ import NikeCrowler
 import LoadAttempt
 import DbManager
 
-#create Chrome Driver without images
-chrome_options = webdriver.ChromeOptions()
+'''normal mode'''
+##driver = webdriver.Chrome("D:\chromedriver_win32\chromedriver.exe")
+#driver = webdriver.Chrome() #after add to PATH and reboot
+
+'''headless mode, no images, no 3d'''
+'''https://developer.chrome.com/blog/headless-chrome/'''
+options = webdriver.ChromeOptions()
+options.add_argument("headless")
+options.add_argument("window-size=1500,1200")
+options.add_argument("no-sandbox")
+options.add_argument("disable-dev-shm-usage")
+options.add_argument("disable-gpu")
+options.add_argument("log-level=3")
+options.add_argument("disable-3d-apis")
+
 prefs = {"profile.managed_default_content_settings.images": 2}
-chrome_options.add_experimental_option("prefs", prefs)
-driver = webdriver.Chrome("D:\chromedriver_win32\chromedriver.exe", chrome_options=chrome_options)
+options.add_experimental_option("prefs", prefs)
 
-nikeAttempt = LoadAttempt.CLoadAttempt("Nike", 1)
+driver = webdriver.Chrome(options=options)
 
-nikeCrowler = NikeCrowler.CNikeCrowler(driver)
-nikeCrowler.GetTodayGoodList(nikeAttempt)
+try:
+    nikeAttempt = LoadAttempt.CLoadAttempt("Nike", 1)
 
-dbMgr = DbManager.CDbManager()
-dbMgr.SaveAttempt(nikeAttempt)
+    nikeCrowler = NikeCrowler.CNikeCrowler(driver)
+    nikeCrowler.GetTodayGoodList(nikeAttempt)
 
-driver.close()
+    dbMgr = DbManager.CDbManager()
+    dbMgr.SaveAttempt(nikeAttempt)
+finally:
+    driver.close()
+
+#docker run -it --entrypoint=/bin/bash
