@@ -34,4 +34,10 @@ try:
 finally:
     driver.close()
 
-#docker run -it --entrypoint=/bin/bash
+
+#build image
+# docker build -t sneackers_crowler .
+
+#run in command line mode
+# docker run -it --entrypoint=/bin/bash sneackers_crowler
+

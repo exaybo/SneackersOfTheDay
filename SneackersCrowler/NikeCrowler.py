@@ -23,7 +23,8 @@ class CNikeCrowler(object):
     
         #close any windows
         try:
-            otherWidows = self.driver.find_elements_by_css_selector("[data-var='closeButton']")
+            #otherWidows = self.driver.find_elements_by_css_selector("[data-var='closeButton']")
+            otherWidows = self.driver.find_elements(By.CSS_SELECTOR, "[data-var='closeButton']")
             for wnd in otherWidows:
                 wnd.click()
         except:
@@ -47,7 +48,7 @@ class CNikeCrowler(object):
             self.driver.implicitly_wait(5)
 
         #Goods
-        goodLinks = self.driver.find_elements_by_css_selector("div[data-product-position] a[aria-label]")
+        goodLinks = self.driver.find_elements(By.CSS_SELECTOR,"div[data-product-position] a[aria-label]")
 
         #Goods uris
         goodUris = [g.get_attribute('href') for g in goodLinks]
@@ -64,7 +65,7 @@ class CNikeCrowler(object):
         aGoodDetailButton.click()
 
         #detailed images
-        detailImgs = self.driver.find_elements_by_css_selector("img.js-media")
+        detailImgs = self.driver.find_elements(By.CSS_SELECTOR,"img.js-media")
 
         imgUris = [d.get_attribute('src') for d in detailImgs]
         for i in range(len(imgUris)):
