@@ -1,7 +1,9 @@
+import dbm
 from selenium import webdriver
 import NikeCrowler
 import LoadAttempt
 import DbManager
+import json
 
 '''normal mode'''
 ##driver = webdriver.Chrome("D:\chromedriver_win32\chromedriver.exe")
@@ -25,12 +27,30 @@ driver = webdriver.Chrome(options=options)
 
 try:
     nikeAttempt = LoadAttempt.CLoadAttempt("Nike", 1)
-
+    
+    nikeSneackerList = list()
     nikeCrowler = NikeCrowler.CNikeCrowler(driver)
-    nikeCrowler.GetTodayGoodList(nikeAttempt)
+    nikeCrowler.GetTodayGoodList(nikeAttempt, nikeSneackerList)
 
-    dbMgr = DbManager.CDbManager()
+
+    #nikeAttempt["ErrorList"].append("err1")
+    #g = LoadAttempt.CGood()
+    #g["Name"] = "air max"
+    #g["Uri"] = "uri sneakers"
+    #g["ImgUriList"].append("uri image1")
+    #nikeList = list()
+    #nikeList.append(g)
+
+    dbMgr = DbManager.CDbManager.get_instance()
     dbMgr.SaveAttempt(nikeAttempt)
+    dbMgr.SaveSneakers(nikeSneackerList)
+    
+    attempts = dbMgr.GetAttempts()
+    sneakers = dbMgr.GetSneackers()
+
+    print( str(attempts) )
+except Exception as e:
+    print(vars(e))
 finally:
     driver.close()
 
@@ -38,6 +58,11 @@ finally:
 #build image
 # docker build -t sneackers_crowler .
 
+#run
+# docker run --rm -d -p 27017:27017 mongo
+
 #run in command line mode
 # docker run -it --entrypoint=/bin/bash sneackers_crowler
 
+#run mongo
+# docker run --rm -d -p 27017:27017 mongo

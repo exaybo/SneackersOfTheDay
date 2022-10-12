@@ -1,10 +1,12 @@
-from datetime import date
+from datetime import date, datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import random
 import LoadAttempt
+import traceback
+
 
 class CNikeCrowler(object):
     def __init__(self, selDriver):
@@ -56,6 +58,8 @@ class CNikeCrowler(object):
 
     def GetDetailedOfGood(self, uri):
         good = LoadAttempt.CGood()
+        good["Uri"] = uri
+        good["Date"] = datetime.utcnow()
         #navigate to random good
         #driver.get(goodUris[random.randint(0,len(goodUris))])
         self.driver.get(uri)
@@ -70,28 +74,24 @@ class CNikeCrowler(object):
         imgUris = [d.get_attribute('src') for d in detailImgs]
         for i in range(len(imgUris)):
             if(i in [0,3,6,7]):
-                good.ImgUriList.append( imgUris[i] )
+                good["ImgUriList"].append( imgUris[i] )
 
         #good name
         name = self.driver.find_element(By.CSS_SELECTOR, "#pdp_product_title")
-        good.Name = name.get_attribute('innerHTML')
+        good["Name"] = name.get_attribute('innerHTML')
         
         return good
 
-    def GetTodayGoodList(self, todayCatch):        
+    def GetTodayGoodList(self, attempt, sneackers):        
         try:
             self.driver.get("https://nike.com")
             self.CloseInfoPopups()
             self.OpenGoodsPage()
             wholeGUriList = self.GetGoodsUriList()
-            if len(wholeGUriList) > todayCatch.countToLoad:
-                for i in range(todayCatch.countToLoad):
+            if len(wholeGUriList) > attempt["CountToLoad"]:
+                for i in range(attempt["CountToLoad"]):
                     idx = random.randint(0, len(wholeGUriList) -1 )
-                    todayCatch.GoodList.append( self.GetDetailedOfGood(wholeGUriList[idx]) )
+                    sneackers.append( self.GetDetailedOfGood(wholeGUriList[idx]) )
         except Exception as inst:
-            todayCatch.ErrorList.append(inst)
-
-
-
-
-
+            msg = traceback.format_exc()
+            attempt["ErrorList"].append(msg)

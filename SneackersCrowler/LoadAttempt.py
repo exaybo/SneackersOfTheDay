@@ -1,16 +1,21 @@
-from datetime import date
+from collections import UserDict
+from datetime import datetime
 
-class CGood:
-    Name = ""
-    ImgUriList = list()
-
-class CLoadAttempt(object):
-    def __init__(self, SourceName, countToLoad):        
-        self.countToLoad = countToLoad
-        self.Source = SourceName      
-        self.Date = date.today()
-        self.ErrorList = list()
-        self.GoodList = list()
+class CGood(UserDict):
+    def __init__(self):
+        super().__init__(self)
+        self["Name"] = None
+        self["Uri"] = None
+        self["Date"] = None
+        self["ImgUriList"] = list()
+    
+class CLoadAttempt(UserDict):
+    def __init__(self, SourceName, CountToLoad):  
+        super().__init__(self)
+        self["CountToLoad"] = CountToLoad
+        self["Source"] = SourceName      
+        self["Date"] = datetime.today()
+        self["ErrorList"] = list()
 
 
 
