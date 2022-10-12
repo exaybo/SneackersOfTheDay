@@ -15,7 +15,7 @@ class CDbManager(object):
         return cls._instance
 
     def __init__(self):
-        self._client =  MongoClient("localhost", 27017)
+        self._client =  MongoClient("host.docker.internal", 27017)
         self._db = self._client.sneackers_db
 
     def GetAttempts(self):

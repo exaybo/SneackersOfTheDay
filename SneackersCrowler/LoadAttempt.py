@@ -14,7 +14,7 @@ class CLoadAttempt(UserDict):
         super().__init__(self)
         self["CountToLoad"] = CountToLoad
         self["Source"] = SourceName      
-        self["Date"] = datetime.today()
+        self["Date"] = datetime.utcnow()
         self["ErrorList"] = list()
 
 
