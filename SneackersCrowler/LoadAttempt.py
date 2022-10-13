@@ -13,6 +13,8 @@ class CLoadAttempt(UserDict):
     def __init__(self, SourceName, CountToLoad):  
         super().__init__(self)
         self["CountToLoad"] = CountToLoad
+        self["CountOfLoaded"] = 0
+        
         self["Source"] = SourceName      
         self["Date"] = datetime.utcnow()
         self["ErrorList"] = list()

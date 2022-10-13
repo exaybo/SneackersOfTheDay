@@ -88,10 +88,12 @@ class CNikeCrowler(object):
             self.CloseInfoPopups()
             self.OpenGoodsPage()
             wholeGUriList = self.GetGoodsUriList()
+            attempt["CountOfLoaded"] = 0
             if len(wholeGUriList) > attempt["CountToLoad"]:
                 for i in range(attempt["CountToLoad"]):
                     idx = random.randint(0, len(wholeGUriList) -1 )
                     sneackers.append( self.GetDetailedOfGood(wholeGUriList[idx]) )
+                    attempt["CountOfLoaded"] += 1
         except Exception as inst:
             msg = traceback.format_exc()
             attempt["ErrorList"].append(msg)
