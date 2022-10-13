@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+/SneackersWebViewer/bin
+/SneackersWebViewer/obj
+/SneackersWebViewer/.vs

@@ -1,0 +1,54 @@
+﻿@page
+@model SneackersWebViewer.Pages.Sneackers.IndexModel
+
+@using SneackersWebViewer.Models;
+
+@{
+    ViewData["Title"] = "Sneackers";
+
+    string getElemColor(Sneacker s)
+    {
+        string color = "none";
+        @if (s.Id.ToString() == Model.CurrentSneacker?.Id.ToString())
+        {
+            color = "greenyellow";
+        }
+
+        return color;
+    }
+}
+
+
+<div class="container">
+    <div class="row">
+        <div role="navigation" class="col-3">
+            <ul>
+                @foreach (var item in Model.Sneackers)
+                {
+                    <li style="background:@getElemColor(item)">
+
+                        <a asp-page-handler="SetCurrent" asp-route-id="@item.Id.ToString()">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                        <div>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div role="contentinfo" class="col-9">
+            <div style="overflow:scroll; height:70vh; ">
+                @if (Model.CurrentSneacker != null)
+                {
+                    @foreach (var item in Model.CurrentSneacker.ImgUriList)
+                    {
+                        <img src="@item" width="100%" />
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
