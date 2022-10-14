@@ -3,7 +3,7 @@
         </div>
         <p>
             The app collects sneakers from diffent sites stores its to database. Pictures can be shown like wallpapers and so on.<br/>
-            The collected information contains: the name of good, link to page on original site, set of urls to images of good.<br/>
+            The collected information contains: the name of good, link to page on original site, set of binary images of good (there are no relations with original site after crowling)<br/>
             The app consists of 3 undepended parts:
             <ul>
                 <li>Sneackers Crowler who find and collects sneackers to DB. It's writen on Python and uses Selenium</li>
