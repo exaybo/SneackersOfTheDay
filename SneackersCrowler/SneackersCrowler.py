@@ -26,11 +26,11 @@ options.add_experimental_option("prefs", prefs)
 driver = webdriver.Chrome(options=options)
 
 try:
-    nikeAttempt = LoadAttempt.CLoadAttempt("Nike", 1)
-    
+    nikeAttempt = LoadAttempt.CLoadAttempt("Nike", 11)
+    nikeImageList = list()
     nikeSneackerList = list()
     nikeCrowler = NikeCrowler.CNikeCrowler(driver)
-    nikeCrowler.GetTodayGoodList(nikeAttempt, nikeSneackerList)
+    nikeCrowler.GetTodayGoodList(nikeAttempt, nikeSneackerList, nikeImageList)
 
 
     #nikeAttempt["ErrorList"].append("err1")
@@ -44,9 +44,10 @@ try:
     dbMgr = DbManager.CDbManager.get_instance()
     dbMgr.SaveAttempt(nikeAttempt)
     dbMgr.SaveSneakers(nikeSneackerList)
-    
+    dbMgr.SaveBinImageList(nikeImageList)
+
     attempts = dbMgr.GetAttempts()
-    sneakers = dbMgr.GetSneackers()
+    #sneakers = dbMgr.GetSneackers()
 
     print( str(attempts) )
 except Exception as e:

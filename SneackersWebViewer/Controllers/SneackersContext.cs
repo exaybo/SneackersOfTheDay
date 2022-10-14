@@ -10,6 +10,7 @@ namespace SneackersWebViewer.Controllers
     {
         List<Sneacker> GetAllSneackers();
         List<Attempt> GetAllAttempts();
+        string GetBase64Image(string uriKey);
     }
 
 
@@ -25,6 +26,20 @@ namespace SneackersWebViewer.Controllers
         public void Dispose()
         {
             
+        }
+
+        public string GetBase64Image(string uriKey)
+        {
+            string ret = "";
+            var binImagesCol = dbClient.GetDatabase("sneackers_db").GetCollection<BinImage>("binimages");
+            var filter = Builders<BinImage>.Filter.Eq("ImgUri", uriKey);
+            var binImg = binImagesCol.Find<BinImage>(filter).FirstOrDefault();
+            
+            if (binImg != null && binImg.ImgBin != null)
+            {
+                ret = "data:image/png;base64," + Convert.ToBase64String(binImg.ImgBin.AsByteArray, 0, binImg.ImgBin.AsByteArray.Length);
+            }
+            return ret;
         }
 
         public List<Attempt> GetAllAttempts()

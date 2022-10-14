@@ -23,12 +23,18 @@ namespace SneackersWebViewer.Pages.Sneackers
 
         }
 
-        public void OnGetSetCurrent( string id )
+        public void OnGetSetCurrent(string id)
         {
             CurrentSneacker = Sneackers.FirstOrDefault(s => s.Id.ToString() == id);
             // code goes here 
             //RedirectToPage();
         }
+
+        public string GetBs64OfUri(string uri)
+        {
+            return _sneackersContext.GetBase64Image(uri);
+        }
+
 
         public async Task<IActionResult> OnPostSetCurrentAsync(string id)
         {

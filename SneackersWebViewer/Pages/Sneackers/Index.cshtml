@@ -41,9 +41,10 @@
             <div style="overflow:scroll; height:70vh; ">
                 @if (Model.CurrentSneacker != null)
                 {
-                    @foreach (var item in Model.CurrentSneacker.ImgUriList)
+                    @foreach (var iu in Model.CurrentSneacker.ImgUriList)
                     {
-                        <img src="@item" width="100%" />
+                        var bs64 = Model.GetBs64OfUri(iu);
+                        <img src="@bs64" width="100%" />
                     }
                 }
 

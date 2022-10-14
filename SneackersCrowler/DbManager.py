@@ -34,5 +34,10 @@ class CDbManager(object):
                                          {"$set": snk},
                                          upsert = True)
     
+    def SaveBinImageList(self, imageList):
+        for img in imageList:
+            self._db.binimages.update_one({"ImgUri": img["ImgUri"]},
+                                         {"$set": img},
+                                         upsert = True)
 
-
+    

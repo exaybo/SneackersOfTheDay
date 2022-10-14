@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import random
 import LoadAttempt
 import traceback
+import time
 
 
 class CNikeCrowler(object):
@@ -43,11 +44,11 @@ class CNikeCrowler(object):
     def GetGoodsUriList(self):
         '''load uris of goods on page'''        
         #press End to load more goods
-        for i in range(3):
+        for i in range(random.randint(3,7)):
             actions = webdriver.ActionChains(self.driver)
             actions.send_keys('\ue010')
             actions.perform()
-            self.driver.implicitly_wait(5)
+            time.sleep(5)
 
         #Goods
         goodLinks = self.driver.find_elements(By.CSS_SELECTOR,"div[data-product-position] a[aria-label]")
@@ -56,7 +57,7 @@ class CNikeCrowler(object):
         goodUris = [g.get_attribute('href') for g in goodLinks]
         return goodUris
 
-    def GetDetailedOfGood(self, uri):
+    def GetDetailedOfGood(self, uri, images):
         good = LoadAttempt.CGood()
         good["Uri"] = uri
         good["Date"] = datetime.utcnow()
@@ -65,6 +66,7 @@ class CNikeCrowler(object):
         self.driver.get(uri)
 
         #show good detailed images
+        time.sleep(5)
         aGoodDetailButton = self.driver.find_element(By.CSS_SELECTOR,"button[data-sub-type='image']")
         aGoodDetailButton.click()
 
@@ -80,20 +82,34 @@ class CNikeCrowler(object):
         name = self.driver.find_element(By.CSS_SELECTOR, "#pdp_product_title")
         good["Name"] = name.get_attribute('innerHTML')
         
+        #load bin images
+        for iu in good["ImgUriList"]:
+            bi = LoadAttempt.CBinImage()
+            bi.loadBinImage(iu)
+            images.append(bi)
+
         return good
 
-    def GetTodayGoodList(self, attempt, sneackers):        
+    
+
+    def GetTodayGoodList(self, attempt, sneackers, images):        
         try:
+            self.driver.implicitly_wait(10)
             self.driver.get("https://nike.com")
             self.CloseInfoPopups()
             self.OpenGoodsPage()
             wholeGUriList = self.GetGoodsUriList()
             attempt["CountOfLoaded"] = 0
-            if len(wholeGUriList) > attempt["CountToLoad"]:
-                for i in range(attempt["CountToLoad"]):
-                    idx = random.randint(0, len(wholeGUriList) -1 )
-                    sneackers.append( self.GetDetailedOfGood(wholeGUriList[idx]) )
-                    attempt["CountOfLoaded"] += 1
-        except Exception as inst:
+            grabCount = min(len(wholeGUriList), attempt["CountToLoad"])
+            if grabCount:
+                for i in range(grabCount):
+                    try:
+                        idx = random.randint(0, len(wholeGUriList) -1 )
+                        sneackers.append( self.GetDetailedOfGood(wholeGUriList[idx], images) )
+                        attempt["CountOfLoaded"] += 1
+                    except Exception:
+                        msg = traceback.format_exc()
+                        attempt["ErrorList"].append(msg)
+        except Exception:
             msg = traceback.format_exc()
             attempt["ErrorList"].append(msg)

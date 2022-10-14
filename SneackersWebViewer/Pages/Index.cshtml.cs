@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MongoDB.Bson;
 using SneackersWebViewer.Controllers;
 using SneackersWebViewer.Models;
 
@@ -20,7 +21,7 @@ namespace SneackersWebViewer.Pages
         {
             Random random = new Random();
             var snkList = _sneackersContext.GetAllSneackers();
-            if(snkList.Count() == 0)
+            if (snkList.Count() == 0)
                 return string.Empty;
             int idsnk = random.Next(snkList.Count());
             Sneacker snk = snkList[idsnk];
@@ -28,7 +29,8 @@ namespace SneackersWebViewer.Pages
                 return string.Empty;
             int idimg = random.Next(snk.ImgUriList.Count());
 
-            return snk.ImgUriList[idimg];
+            string ret = _sneackersContext.GetBase64Image(snk.ImgUriList[idimg]);
+            return ret;
         }
 
 
